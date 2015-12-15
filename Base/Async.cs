@@ -57,7 +57,7 @@ public class Async {
     // Òì²½¸üĞÂ
     public static void Update() {
 
-        Update(5);
+        Update(6);
 
     }
 

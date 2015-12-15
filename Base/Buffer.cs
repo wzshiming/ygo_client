@@ -9,9 +9,6 @@ public class CardInfo {
     public string enrace, entype, enattr;
 }
 public class Buffer {
-    public static void WriteFile(string path,byte[] bytes) {
-        File.WriteAllBytes(Application.dataPath + path, bytes);
-    }
 
 
     private static Dictionary<string, Texture2D> texture = new Dictionary<string, Texture2D>();
@@ -21,6 +18,7 @@ public class Buffer {
         }
         return texture[path];
     }
+
 
     
     public static Texture2D GetFront(long i) {

@@ -106,7 +106,7 @@ public class CardsBarGrid : MonoBehaviour {
 
     public void JumpPage(long s) {
 
-        if (s < 0 || s * transform.childCount > finer.Count) {
+        if (s < 0 || s * transform.childCount >= finer.Count) {
             return;
         }
         for (var i = 0; i != transform.childCount; i++) {

@@ -17,68 +17,66 @@ public class Sockets {
         }
     }
 
-    private static void Init() {
-        if (client != null && !client.socket.Connected) {
-            Ok.Show("hint.l001");
-            client = null;
-        }
-        if (client == null) {
-            //var host = "zsms.site";
-            //var host = "www.mohegame.com";
-            var host = "127.0.0.1";
-            var port = 3008;
-            client = new AsyncTCPClient(host, port, () => {
-                client.WriteMsg(new byte[] { 255, 255, 255, 255 });
-                client.ReadMsg((byte[] d) => {
-                    var m0 = d[0];
-                    var m1 = d[1];
-                    var m2 = d[2];
-                    var m3 = d[3];
-                    var json = System.Text.Encoding.UTF8.GetString(d, 4, d.Length - 4);
-                    Debug.Log(json);
-
-                    var index = Codes.DeJson(json) as Hashtable;
-                    //foreach (DictionaryEntry de in index){
-                    client.om.Add(index);
-                    //}
-                    client.ReadLoop((byte[] dd) => {
-                        if (dd.Length < 6) {
-                            return;
-                        }
-                        var hand = new byte[] { dd[0], dd[1], dd[2], dd[3] };
-
-                        var i = System.BitConverter.ToInt32(hand, 0);
+    public static void Init() {
 
 
-                        AsyncTCPClient.cb f;
 
-                        if (client.rmaps.ContainsKey(i)) {
-                            f = client.rmaps[i];
-                        } else if (client.maps.ContainsKey(i)) {
-                            f = client.maps[i];
-                            client.maps.Remove(i);
-                        } else {
-                            Debug.Log("miss");
-                            return;
-                        }
+        //var host = "zsms.site";
+        //var host = "www.mohegame.com";
+        var host = "127.0.0.1";
+        var port = 3008;
+        client = new AsyncTCPClient(host, port, () => {
+            client.WriteMsg(new byte[] { 255, 255, 255, 255 });
+            client.ReadMsg((byte[] d) => {
+                var m0 = d[0];
+                var m1 = d[1];
+                var m2 = d[2];
+                var m3 = d[3];
+                var json = System.Text.Encoding.UTF8.GetString(d, 4, d.Length - 4);
+                Debug.Log(json);
 
-                        var jso = System.Text.Encoding.UTF8.GetString(dd, 4, dd.Length - 4);
-                        //Debug.Log (jso);
-                        var obj = Json.jsonDecode(jso) as Hashtable;
+                var index = Codes.DeJson(json) as Hashtable;
+                //foreach (DictionaryEntry de in index){
+                client.om.Add(index);
+                //}
+                client.ReadLoop((byte[] dd) => {
+                    if (dd.Length < 6) {
+                        return;
+                    }
+                    var hand = new byte[] { dd[0], dd[1], dd[2], dd[3] };
 
-                        //Debug.Log("loop");
-                        Async.Push(() => {
-                            f(obj);
-                        });
+                    var i = System.BitConverter.ToInt32(hand, 0);
+
+
+                    AsyncTCPClient.cb f;
+
+                    if (client.rmaps.ContainsKey(i)) {
+                        f = client.rmaps[i];
+                    } else if (client.maps.ContainsKey(i)) {
+                        f = client.maps[i];
+                        client.maps.Remove(i);
+                    } else {
+                        Debug.Log("miss");
+                        return;
+                    }
+
+                    var jso = System.Text.Encoding.UTF8.GetString(dd, 4, dd.Length - 4);
+                    //Debug.Log (jso);
+                    var obj = Json.jsonDecode(jso) as Hashtable;
+
+                    //Debug.Log("loop");
+                    Async.Push(() => {
+                        f(obj);
                     });
                 });
             });
-            Async.PushDelay(2.0f, () => {
-                if (!client.socket.Connected) {
-                    Ok.Show("hint.l001");
-                }
-            });
-        }
+        });
+        Async.PushDelay(2.0f, () => {
+            if (!client.socket.Connected) {
+                Ok.Show("hint.l001");
+            }
+        });
+
     }
 
     public static void DisConn() {
@@ -135,7 +133,7 @@ public class AsyncTCPClient {
                 int length = socket.EndSend(asyncResult);
             }, null);
         } catch (Exception ex) {
-            Init.First();
+            Init.First("hint.l001");
             Debug.Log(ex.Message);
         }
     }
@@ -157,7 +155,7 @@ public class AsyncTCPClient {
 
             }, null);
         } catch (Exception ex) {
-            Init.First();
+            Init.First("hint.l001");
             Debug.Log(ex.Message);
         }
 

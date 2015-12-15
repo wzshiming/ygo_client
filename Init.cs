@@ -55,6 +55,16 @@ public class Init : MonoBehaviour {
         Ret();
     }
 
+    public static void First(string k) {
+        while (s.Count > 1) {
+            s.Pop();
+        }
+        Ret();
+        Ok.Show(k);
+        Sockets.Init();
+    }
+
+
 
     public void ToFirst() {
         First();

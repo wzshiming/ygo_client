@@ -37,7 +37,7 @@ public class EditBarGrid : MonoBehaviour {
                     iTween.ScaleTo(gameObject, half, 1.0f);
                     var uig = GetComponent<UIGrid>();
                     uig.maxPerLine = 8;
-                    uig.cellWidth = 130;
+                    uig.cellWidth = 160;
                     uig.cellHeight = 120;
                     uig.enabled = true;
 
@@ -46,7 +46,7 @@ public class EditBarGrid : MonoBehaviour {
                     iTween.ScaleTo(gameObject, half8, 1.0f);
                     var uig = GetComponent<UIGrid>();
                     uig.maxPerLine = 3;
-                    uig.cellWidth = 130;
+                    uig.cellWidth = 160;
                     uig.cellHeight = 250;
                     uig.enabled = true;
                     //iTween.MoveTo (gameObject, new Vector3 (-1.0f, 0.7f, 0),0.3f);

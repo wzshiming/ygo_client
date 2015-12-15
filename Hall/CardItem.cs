@@ -86,7 +86,7 @@ public class CardItem : MonoBehaviour {
             }
             isThumb = value;
             if (isThumb) {
-                iTween.ScaleTo(transform.FindChild("Name").gameObject, new Vector3(2, 2, 2), 0.5f);
+                iTween.ScaleTo(transform.FindChild("Name").gameObject, new Vector3(1.5f, 1.5f, 1), 0.5f);
                 transform.FindChild("Size").transform.localPosition = new Vector3(52, 36, 0);
             } else {
                 iTween.ScaleTo(transform.FindChild("Name").gameObject, new Vector3(1, 1, 1), 0.5f);
