@@ -39,7 +39,7 @@ public class Area : MonoBehaviour {
             }));
         } else {
             addGroup("hand", new Group((c, i, j) => {
-                c.MoveTo(offset_x * (i - j / 2) * 0.55f, 0.2f, -1.8f);
+                c.MoveTo(offset_x * (i - j / 2) * 0.55f, 0.2f, -2.0f);
             }, (c, i, j) => {
                 c.MoveTo(offset_x * (i - j / 2) * 0.55f, 0.5f, -1.4f);
             }, (c) => {
@@ -71,7 +71,7 @@ public class Area : MonoBehaviour {
         addGroup("extra", new Group((c, i, j) => {
             c.MoveTo(-3.43f, 0.02f * (i + 1), -1.3f);
         }, (c, i, j) => {
-            c.MoveTo(-3.43f + offset_x * (int)(i % 5) / 2, 0.02f * (i + 1), -1.3f + offset_z * (int)(i / 5) / 2);
+            c.MoveTo(-3.43f + offset_x * (int)(i % 5) / 2, 0.02f * (i + 1), -1.0f + offset_z * (int)(i / 5) / 2);
         }, (c) => {
             c.FaceUpAttack();
         }));

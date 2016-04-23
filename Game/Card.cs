@@ -16,8 +16,8 @@ public class Card : MonoBehaviour {
     Vector3 ang;
     private static Vector3 tad = new Vector3(90, 0, 0);
 
-    //public List<string> Use = new List<string>;
-    public string use = ""; 
+    public List<string> Use = new List<string>();
+    //public string use = ""; 
     
 
     // 获取指定uniq的卡牌 不存在则创建

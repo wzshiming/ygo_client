@@ -25,12 +25,22 @@ public class SelectBox : MonoBehaviour {
         }
     }
 
+    public void Focus() {
+        gameObject.SetActive(true);
+        for (var i = 0; i != transform.childCount; i++) {
+            var b = transform.GetChild(i);
+            b.gameObject.SetActive(false);
+        }
+    }
+
+
+
     public string Use1 {
         set {
             var b = transform.FindChild("Use1");
             b.GetComponent<UILabel>().text = value;
             b.GetComponent<MouseOver>().OnDragOut();
-            b.gameObject.SetActive(value != "");
+            b.gameObject.SetActive(true);
         }
     }
 
@@ -39,7 +49,26 @@ public class SelectBox : MonoBehaviour {
             var b = transform.FindChild("Use2");
             b.GetComponent<UILabel>().text = value;
             b.GetComponent<MouseOver>().OnDragOut();
-            b.gameObject.SetActive(value != "");
+            b.gameObject.SetActive(true);
+        }
+    }
+
+    public string Use3 {
+        set {
+            var b = transform.FindChild("Use3");
+            b.GetComponent<UILabel>().text = value;
+            b.GetComponent<MouseOver>().OnDragOut();
+            b.gameObject.SetActive(true);
+        }
+    }
+
+
+    public string Use4 {
+        set {
+            var b = transform.FindChild("Use4");
+            b.GetComponent<UILabel>().text = value;
+            b.GetComponent<MouseOver>().OnDragOut();
+            b.gameObject.SetActive(true);
         }
     }
 

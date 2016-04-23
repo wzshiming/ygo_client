@@ -18,13 +18,23 @@ public class Sockets {
     }
 
     public static void Init() {
-
-
-
+        var fname = "addr.txt";
         //var host = "zsms.site";
         //var host = "www.mohegame.com";
         var host = "127.0.0.1";
         var port = 3008;
+        var addr = Files.LoadText(fname);
+
+        if (addr == null || addr == "") {
+            Files.CreateFile(fname, host + ":" + port.ToString());
+        } else {
+            var ss = addr.Split(':');
+            if (ss.Length == 2) {
+                host = ss[0];
+                port = (int)Codes.ToInt(ss[1]);
+            }
+        }
+        
         client = new AsyncTCPClient(host, port, () => {
             client.WriteMsg(new byte[] { 255, 255, 255, 255 });
             client.ReadMsg((byte[] d) => {

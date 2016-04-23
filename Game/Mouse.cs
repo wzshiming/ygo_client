@@ -11,8 +11,6 @@ public class Mouse : MonoBehaviour {
     public static Cbs cb;
 
 
-    string Use1Str, Use2Str;
-
     void Start() {
         if (selectBox == null) {
             selectBox = GameObject.Find("SelectBox");
@@ -124,25 +122,24 @@ public class Mouse : MonoBehaviour {
         if (c.Rim) {
 
             selectBox.transform.position = UICamera.currentCamera.ScreenToWorldPoint(Input.mousePosition);
-            selectBox.SetActive(true);
-
-            if (c.use == null || c.use == "") {
-                Use1Str = Locales.Get("oper.Select");
-                Use2Str = "";
-
-            } else {
-                var b = c.use.Split(',');
-                Use1Str = Locales.Get("oper." + b[0]);
-                if (b.Length > 1) {
-                    Use2Str = Locales.Get("oper." + b[1]);
-                } else {
-                    Use2Str = "";
+            
+            var sb = selectBox.GetComponent<SelectBox>();
+            sb.Focus();
+            if (c.Use.Count != 0){
+                if (c.Use.Count > 0) {
+                    sb.Use1 = Locales.Get("oper." + c.Use[0]);
+                }
+                if (c.Use.Count > 1) {
+                    sb.Use2 = Locales.Get("oper." + c.Use[1]);
+                }
+                if (c.Use.Count > 2) {
+                    sb.Use3 = Locales.Get("oper." + c.Use[2]);
+                }
+                if (c.Use.Count > 3) {
+                    sb.Use4 = Locales.Get("oper." + c.Use[3]);
                 }
             }
-            var sb = selectBox.GetComponent<SelectBox>();
-            sb.Use1 = Use1Str;
-            sb.Use2 = Use2Str;
-
+           
         }
 
     }

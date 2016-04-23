@@ -28,6 +28,7 @@ public class Cbs : MonoBehaviour {
     public GameObject Flag0, Flag1;
 
 
+
     public int re;
     void Start() {
         chat = GameObject.Find("Chat Area");
@@ -57,9 +58,9 @@ public class Cbs : MonoBehaviour {
 
         });
 
-        cbs.Add("changeHp", (args) => {
+        cbs.Add("changeLp", (args) => {
             var i = Codes.ToInt(args["master"]);
-            var hp = Codes.ToInt(args["hp"]);
+            var hp = Codes.ToInt(args["lp"]);
             var ul = players[i].transform.GetChild(1);
             ul.GetComponent<UILabel>().text = hp.ToString();
 
@@ -125,7 +126,38 @@ public class Cbs : MonoBehaviour {
             }
         });
 
+
+
         Dictionary<long, bool> tri = new Dictionary<long, bool>();
+        cbs.Add("setPickRe", (args) => {
+            var uniq = args["operate"] as Hashtable;
+            //var sole = args["sole"] as string;
+            var use = args["use"] as string;
+            foreach (DictionaryEntry un in uniq) {
+                var u = Codes.ToInt(un.Key);
+                var c = Card.Get(u);
+
+                var oa = un.Value as ArrayList;
+                c.Use.Clear();
+                foreach (var i in oa) {
+                    if (i is string) {
+                        c.Use.Add(i as string);
+                    }
+                }
+
+                c.Rim = true;
+
+                tri.Add(u, true);
+                if (c.Pos.Name == "deck") {
+                    Async.Push(() => {
+                        if (c.Pos.Name == "deck") {
+                            moveTo(c.Uniq, "select");
+                        }
+                    });
+                }
+            }
+        });
+
         cbs.Add("setPick", (args) => {
             var uniq = args["uniqs"] as ArrayList;
             //var sole = args["sole"] as string;
@@ -134,25 +166,34 @@ public class Cbs : MonoBehaviour {
                 var u = Codes.ToInt(un);
                 var c = Card.Get(u);
                 c.Rim = true;
-                c.use = use;
-                //c.use = use;
+                c.Use.Clear();
+                c.Use.Add(use);
 
                 tri.Add(u, true);
                 if (c.Pos.Name == "deck") {
-                    Async.PushDelay(0.2f, () => {
+                    Async.Push(() => {
                         if (c.Pos.Name == "deck") {
-                            moveTo( c.Uniq, "select");
+                            moveTo(c.Uniq, "select");
                         }
                     });
                 }
             }
         });
 
+        cbs.Add("cloPickOne", (args) => {
+            var uniq = Codes.ToInt(args["uniq"]);
+            var c = Card.Get(uniq);
+            c.Use.Clear();
+            c.Rim = false;
+            tri.Remove(uniq);
+        });
+
+
         cbs.Add("cloPick", (args) => {
             foreach (KeyValuePair<long, bool> de in tri) {
                 var c = Card.Get(de.Key);
-                c.use = "";
                 //c.use = "";
+                c.Use.Clear();
                 c.Rim = false;
             }
             foreach (KeyValuePair<long, bool> de in tri) {
@@ -238,7 +279,7 @@ public class Cbs : MonoBehaviour {
 
         Async.PuahRound(1.0f, () => {
             var ss = s.Subtract(DateTime.Now);
-            Cd.GetComponent<UILabel>().text = string.Format("{0}:{1}", ss.Minutes, ss.Seconds);
+            Cd.GetComponent<UILabel>().text = string.Format("{0} {1}", Locales.Get("ui.Wait"), ss.Minutes*60+ ss.Seconds);
             iTween.PunchScale(Cd.gameObject, Vector3.one, 0.9f);
         });
 
@@ -263,30 +304,26 @@ public class Cbs : MonoBehaviour {
                 flag = Flag1;
                 flagt = Flag0;
             }
-            iTween.MoveTo(flagt, Wt.transform.position, 0.2f);
+           
             Nc.GetComponent<UILabel>().text = Locales.Get("ui.Chain");
             if (step == 0) {
-                iTween.MoveTo(flag, Nc.transform.position, 0.2f);
+                //iTween.MoveTo(flag, Nc.transform.position, 0.2f);
                 if (self) {
                     Nc.GetComponent<UILabel>().text = Locales.Get("ui.NoChain");
                     iTween.PunchScale(Nc.gameObject, Vector3.one, 2.0f);
                 }
+               
                 //Nc.SetActive(true);
             } else {
-                //Nc.SetActive(false);
                 for (var i = 0; i != St.transform.childCount; i++) {
-                    var b = St.transform.GetChild(i);
-                    if (i == step - 1) {
-                        iTween.MoveTo(flag, b.position, 0.2f);
-                        b.GetComponent<UIButton>().isEnabled = true;
-                        iTween.PunchScale(b.gameObject, Vector3.one, 2.0f);
-                    } else if ((i == step) || (i == 5 && step > 1)) {
-                        b.GetComponent<UIButton>().isEnabled = true;
-                    } else {
-                        b.GetComponent<UIButton>().isEnabled = false;
-                    }
+                    var b0 = St.transform.GetChild(i);
+                    b0.GetComponent<UIButton>().isEnabled = false;
                 }
-
+                var b = St.transform.GetChild((int)step-1);
+                b.GetComponent<UIButton>().isEnabled = true;
+                iTween.MoveTo(flag, b.position, 0.2f);
+                iTween.PunchScale(b.gameObject, Vector3.one, 2.0f);
+                iTween.MoveTo(flagt, Cd.transform.position, 0.2f);
             }
 
         });
@@ -333,15 +370,7 @@ public class Cbs : MonoBehaviour {
     public void NoChain() {
         send(0, 11);
     }
-    public void BP() {
-        send(0, 4);
-    }
-    public void MP2() {
-        send(0, 5);
-    }
-    public void EP() {
-        send(0, 6);
-    }
+
 
     public void Lose() {
         send(0, 666);
